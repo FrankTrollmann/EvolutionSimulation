@@ -50,6 +50,11 @@ public class Mouth extends CreatureComponent {
 	}
 	
 	@Override
+	public double calculateTreeWeight() {
+		return getWeight();
+	}
+	
+	@Override
 	public long getBiggestPartSize() {
 		return radius;
 	}

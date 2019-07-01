@@ -48,7 +48,7 @@ public class Creature extends HasSpeed implements CanDraw, CanAct{
 	 * the weight of the creature
 	 * derived as sum of the weight of body parts
 	 */
-	long weight = -1;
+	double weight = -1;
 	
 	/**
 	 * the inital energy value.
@@ -175,7 +175,7 @@ public class Creature extends HasSpeed implements CanDraw, CanAct{
 		compileBody();
 		this.energy = initialEnergy;
 		
-		this.weight = head.getWeight();
+		this.weight = head.calculateTreeWeight();
 		this.biggestPartSize = head.getBiggestPartSize();
 		this.mutationHistoryNode.onCreatureBirth();
 		

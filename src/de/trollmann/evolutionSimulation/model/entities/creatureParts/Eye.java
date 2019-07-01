@@ -48,6 +48,12 @@ public class Eye extends CreatureComponentWithConnections implements HasOutputCo
 	}
 
 	@Override
+	public double calculateTreeWeight() {
+		return getWeight();
+	}
+	
+	
+	@Override
 	public void draw(DrawableCanvas view, double x, double y, double angle) {
 		view.drawCircle(x, y, radius, Color.YELLOW);
 		

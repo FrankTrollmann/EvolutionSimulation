@@ -124,6 +124,12 @@ public class Joint extends CreatureComponentWithConnections implements HasInputC
 		return 1;
 	}
 	
+	
+	@Override
+	public double calculateTreeWeight() {
+		return getWeight() + target.calculateTreeWeight();
+	}
+	
 	@Override
 	public long getBiggestPartSize() {
 		return Math.max(10, target.getBiggestPartSize());

@@ -233,6 +233,16 @@ public class MassComponent extends CreatureComponent{
 	}
 	
 	@Override
+	public double calculateTreeWeight() {
+
+		double weight = getWeight();
+		for(ComponentConnection component : subComponents) {
+			weight += component.component.calculateTreeWeight();
+		}
+		return weight;
+	}
+	
+	@Override
 	public long getBiggestPartSize() {
 		long max = this.radius;
 		for (ComponentConnection componentConnection : subComponents) {

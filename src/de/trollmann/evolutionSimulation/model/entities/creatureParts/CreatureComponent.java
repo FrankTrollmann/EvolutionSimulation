@@ -51,6 +51,8 @@ public abstract class CreatureComponent extends HasRadius implements HasWeight {
 	
 	public abstract void calculateEnergyRequirement();
 	
+	public abstract double calculateTreeWeight();
+	
 	
 	/**
 	 * the draw function. Draws centered around x and y
