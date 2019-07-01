@@ -86,12 +86,22 @@ public class Creature extends HasSpeed implements CanDraw, CanAct{
 	 * the current energy of the creature
 	 */
 	double energy;
+	
 		/**
 		 * getter
 		 * @return
 		 */
 		public double getEnergy() {
 			return energy;
+		}
+		
+		/**
+		 * method to be called when the creature spends energy for sth.
+		 * @param energy
+		 * @return
+		 */
+		public void spendEnergy(double spentEnergy) {
+			energy -= spentEnergy;
 		}
 	
 	
@@ -317,11 +327,10 @@ public class Creature extends HasSpeed implements CanDraw, CanAct{
 	@Override
 	public void act() {
 		energy -= initialEnergy/Configuration.averageCreatureLifeLength;
+		head.act(this.getX(), this.getY(), this.getRotation());
+		
 		if(energy < initialEnergy * Configuration.deathThreshold ) {
 			deathAndCleanup();
-		} else {
-			head.act(this.getX(), this.getY(), this.getRotation());
-			// TODO: remove action costs here!
 		}
 	}
 

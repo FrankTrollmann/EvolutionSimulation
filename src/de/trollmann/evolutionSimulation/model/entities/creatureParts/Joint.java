@@ -12,6 +12,7 @@ import de.trollmann.evolutionSimulation.model.net.HasInputConnections;
 import de.trollmann.evolutionSimulation.model.net.Input;
 import de.trollmann.evolutionSimulation.model.net.Output;
 import de.trollmann.evolutionSimulation.model.physics.HasPosition;
+import de.trollmann.evolutionSimulation.util.Configuration;
 import de.trollmann.evolutionSimulation.util.RandomGenerator;
 import de.trollmann.evolutionSimulation.view.DrawableCanvas;
 
@@ -271,20 +272,26 @@ public class Joint extends CreatureComponentWithConnections implements HasInputC
 		// save current value of forwardDirection for later
 		boolean movedForward = forwardDirection;
 		
+		double speedMoved;
+		
 		// move the joint
 		if(forwardDirection) {
 			currentAngle += positiveSpeed * signalAmplifier;
+			speedMoved = positiveSpeed;
 			if(currentAngle >= 1) {
 				forwardDirection = false;
 				currentAngle = 1;
 			}
 		} else {
 			currentAngle -= negativeSpeed * signalAmplifier;
+			speedMoved = negativeSpeed;
 			if (currentAngle <= -1) {
 				forwardDirection = true;
 				currentAngle = -1;
 			}
 		}
+		
+		creature.spendEnergy(speedMoved = target.energyRequirement / Configuration.averageCreatureLifeLength);
 		
 		HasPosition positionAfter = getTargetPosition(x, y, getRotation());
 		// update speed (TODO: more sophisticated)

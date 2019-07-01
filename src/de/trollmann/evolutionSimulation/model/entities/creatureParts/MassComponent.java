@@ -393,54 +393,56 @@ public class MassComponent extends CreatureComponent{
 		// 	get a random free input
 		//  get a random free output
 		//	if source > target we cannot create a direction. add a memory node instead
-		options.add(new EvolutionOption(3,"Mass - add connection") {
-			
-			@Override
-			public void apply() {
+		if(getAllInputs().size() > 0 && getAllOutputs().size() > 0) {
+			options.add(new EvolutionOption(3,"Mass - add connection") {
 				
-				// get all inputs and outputs
-				List<Input> inputs = getAllInputs();
-				List<Output> outputs = getAllOutputs();
-				
-				// nothing to do if there are no inputs or outputs
-				if(inputs.size() == 0 || outputs.size() == 0) {
-					this.description_appender = "no inputs or outputs";
-					return;
-				}
-				
-				Input input = inputs.get(RandomGenerator.nextInt(inputs.size()));
-				Output output = outputs.get(RandomGenerator.nextInt(outputs.size()));
-				
-				boolean dependent = false;
-				if(output.getParent() instanceof HasInputConnections) {
-					if(HasInputConnections.isDependentOn(input.getParent(),(HasInputConnections) output.getParent())) {
-						dependent = true;
+				@Override
+				public void apply() {
+					
+					// get all inputs and outputs
+					List<Input> inputs = getAllInputs();
+					List<Output> outputs = getAllOutputs();
+					
+					// nothing to do if there are no inputs or outputs
+					if(inputs.size() == 0 || outputs.size() == 0) {
+						this.description_appender = "no inputs or outputs";
+						return;
 					}
-				}
-				
-				if(!dependent) {
-					Connection connection = new Connection(MassComponent.this);
-					connection.setSender(output);
-					connection.setReceiver(input);
-					this.description_appender = "normalConnection " + output.getParent().getClass().getSimpleName() + "->" + input.getParent().getClass().getSimpleName(); 
- 				} else {
-					Memory memory = new Memory();
-					MassComponent.this.getMemory().add(memory);
 					
-					Connection output2Memory = new Connection(MassComponent.this);
-					output2Memory.setSender(output);
-					output2Memory.setReceiver(memory.getInput());
+					Input input = inputs.get(RandomGenerator.nextInt(inputs.size()));
+					Output output = outputs.get(RandomGenerator.nextInt(outputs.size()));
 					
-					Connection memory2Input = new Connection(MassComponent.this);
-					memory2Input.setSender(memory.getOutput());
-					memory2Input.setReceiver(input);
-					this.description_appender = "new memoryConnection " + output.getParent().getClass().getSimpleName() + "->" + input.getParent().getClass().getSimpleName();
+					boolean dependent = false;
+					if(output.getParent() instanceof HasInputConnections) {
+						if(HasInputConnections.isDependentOn(input.getParent(),(HasInputConnections) output.getParent())) {
+							dependent = true;
+						}
+					}
+					
+					if(!dependent) {
+						Connection connection = new Connection(MassComponent.this);
+						connection.setSender(output);
+						connection.setReceiver(input);
+						this.description_appender = "normalConnection " + output.getParent().getClass().getSimpleName() + "->" + input.getParent().getClass().getSimpleName(); 
+	 				} else {
+						Memory memory = new Memory();
+						MassComponent.this.getMemory().add(memory);
+						
+						Connection output2Memory = new Connection(MassComponent.this);
+						output2Memory.setSender(output);
+						output2Memory.setReceiver(memory.getInput());
+						
+						Connection memory2Input = new Connection(MassComponent.this);
+						memory2Input.setSender(memory.getOutput());
+						memory2Input.setReceiver(input);
+						this.description_appender = "new memoryConnection " + output.getParent().getClass().getSimpleName() + "->" + input.getParent().getClass().getSimpleName();
+					}
+					
+					
+					
 				}
-				
-				
-				
-			}
-		});
+			});
+		}
 
 		if(connections.size() > 0) {
 			// remove connection

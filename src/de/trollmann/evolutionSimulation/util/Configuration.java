@@ -51,6 +51,7 @@ public class Configuration {
 	 */
 	public static double averageCreatureLifeLength = 1000;
 	
+	
 	/**
 	 * decides when a creature dies. It dies, when it's current energy is smaller than deathThreshold * initialEnergy. 
 	 */
