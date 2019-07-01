@@ -168,8 +168,8 @@ public class Joint extends CreatureComponentWithConnections implements HasInputC
 	}
 
 	@Override
-	protected void propagateVisitorToChildren(CreatureComponentVisitor visitor) {
-		target.visitSubtree(visitor);
+	protected void propagateVisitorToChildren(CreatureComponentVisitor visitor, boolean childrenFirst) {
+		target.visitSubtree(visitor,childrenFirst);
 		
 	}
 	
@@ -318,7 +318,10 @@ public class Joint extends CreatureComponentWithConnections implements HasInputC
 	@Override
 	public void getFreeInputConnections(List<Input> toFill) {
 		if(movementInput.getConnection() == null) toFill.add(movementInput);
-		
+	}
+	@Override
+	public void calculateEnergyRequirement() {
+		this.energyRequirement = target.getEnergyRequirement();
 	}
 
 }

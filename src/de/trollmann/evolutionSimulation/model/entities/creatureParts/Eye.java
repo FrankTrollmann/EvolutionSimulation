@@ -11,6 +11,7 @@ import de.trollmann.evolutionSimulation.model.net.CanProvideOutputSignal;
 import de.trollmann.evolutionSimulation.model.net.Connection;
 import de.trollmann.evolutionSimulation.model.net.HasOutputConnections;
 import de.trollmann.evolutionSimulation.model.net.Output;
+import de.trollmann.evolutionSimulation.util.Configuration;
 import de.trollmann.evolutionSimulation.util.RandomGenerator;
 import de.trollmann.evolutionSimulation.view.DrawableCanvas;
 
@@ -117,7 +118,7 @@ public class Eye extends CreatureComponentWithConnections implements HasOutputCo
 	}
 
 	@Override
-	protected void propagateVisitorToChildren(CreatureComponentVisitor visitor) {	}
+	protected void propagateVisitorToChildren(CreatureComponentVisitor visitor, boolean childrenFirst) {	}
 
 	@Override
 	public void updateConnectionsAfterCopy(
@@ -149,5 +150,11 @@ public class Eye extends CreatureComponentWithConnections implements HasOutputCo
 	 */
 	public static Eye createRandomEye() {
 		return new Eye();
+	}
+	
+	@Override
+	public void calculateEnergyRequirement() {
+		this.energyRequirement = 0.01 / Configuration.averageCreatureLifeLength;
+		
 	}
 }

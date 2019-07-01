@@ -86,16 +86,7 @@ public class Creature extends HasSpeed implements CanDraw, CanAct{
 		}
 	
 	
-	/**
-	 * constructor
-	 * @param x x-position
-	 * @param y y-position
-	 */
-	public Creature(WorldModel worldModel, double x, double y) {
-		super(x, y);
-		this.worldModel = worldModel;
-		this.head = head;
-	}
+	
 	
 	/**
 	 * constructor
@@ -146,12 +137,31 @@ public class Creature extends HasSpeed implements CanDraw, CanAct{
 	 */
 	public void postInitialize() {
 		if(head == null) throw new RuntimeException("creature has no body after initialization");
+		
+		// TODO: can this be merged into postInitialize somehow?
+		compileBody();
+		
 		this.weight = head.getWeight();
 		reproductionThreshold = weight / 2;
 		this.biggestPartSize = head.getBiggestPartSize();
 		this.mutationHistoryNode.onCreatureBirth();
+		
 		head.postInitialize(this);
 
+	}
+	
+	/**
+	 * compiles the body of the creature, filling in blanks that are 
+	 */
+	public void compileBody() {
+		head.visitSubtree(new CreatureComponentVisitor() {
+			
+			@Override
+			public void visit(CreatureComponent component) {
+				component.compile();
+				
+			}
+		}, true);
 	}
 	
 	/**
@@ -211,11 +221,11 @@ public class Creature extends HasSpeed implements CanDraw, CanAct{
 	public Creature copy() {
 		
 		// create creature at same position but with random rotation
-		Creature creature = new Creature(worldModel, getX(), getY());
+		MassComponent headCopy = (MassComponent) head.copy();
+		
+		Creature creature = new Creature(worldModel, headCopy, getX(), getY());
 		creature.setRotation(RandomGenerator.nextDouble());
 	
-		MassComponent headCopy = (MassComponent) head.copy();
-		creature.setHead(headCopy);
 		
 		return creature;
 	}
@@ -228,7 +238,7 @@ public class Creature extends HasSpeed implements CanDraw, CanAct{
 			public void visit(CreatureComponent component) {
 				component.getEvolutionOptions(options);
 			}
-		});
+		},false);
 		
 		
 		head.getEvolutionOptions(options);

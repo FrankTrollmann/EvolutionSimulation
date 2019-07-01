@@ -34,9 +34,22 @@ public abstract class CreatureComponent extends HasRadius implements HasWeight {
 		return radius;
 	}
 	
+	
 	public CreatureComponent() {
 		super(0,0,0);
 	}
+	
+	
+	/**
+	 * the energy required to keep this creature aligned for one tick
+	 * general aim: standard creature should live 100 ticks
+	 */
+	double energyRequirement;
+	public double getEnergyRequirement() {
+		return energyRequirement;
+	}
+	
+	public abstract void calculateEnergyRequirement();
 	
 	
 	/**
@@ -94,20 +107,24 @@ public abstract class CreatureComponent extends HasRadius implements HasWeight {
 	 */
 	public abstract void getEvolutionOptions(List<EvolutionOption> options);
 	
+	
+	
 	/**
 	 * visits this component and all of its children.
 	 * @param visitor
 	 */
-	public final void visitSubtree(CreatureComponentVisitor visitor) {
-		visitor.visit(this);
-		propagateVisitorToChildren(visitor);
+	public final void visitSubtree(CreatureComponentVisitor visitor, boolean childrenFirst) {
+		
+		if(!childrenFirst) visitor.visit(this);
+		propagateVisitorToChildren(visitor,childrenFirst);
+		if(childrenFirst) visitor.visit(this);
 	}
 	
 	/**
 	 * traverses the creature and calls a visitor for each component
 	 * @param visitor
 	 */
-	protected abstract void propagateVisitorToChildren(CreatureComponentVisitor visitor);
+	protected abstract void propagateVisitorToChildren(CreatureComponentVisitor visitor, boolean childrenFirst);
 	
 	
 	
@@ -120,6 +137,14 @@ public abstract class CreatureComponent extends HasRadius implements HasWeight {
 			case 3: return Eye.createRandomEye();
 		}
 		throw new RuntimeException("type " + type + "was not hanlded in switch case");
+	}
+	
+	/**
+	 * method used to compile information like energy use etc. that can only be calculated after the body is assembled. 
+	 * The method is not supposed to be called for children. For this, use visitSubtree
+	 */
+	public void compile() {
+		calculateEnergyRequirement();
 	}
 	
 	

@@ -35,5 +35,10 @@ public class Configuration {
 	 */
 	public static double speedDecay = 0.9;
 	
+	/**
+	 * the average length of days it should take to get the initial creature from 100% energy to 0 % energy.
+	 * This factor influences energy consumption of creature components.
+	 */
+	public static double averageCreatureLifeLength = 100;
 	
 }

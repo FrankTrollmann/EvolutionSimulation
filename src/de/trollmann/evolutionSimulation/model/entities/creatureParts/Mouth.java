@@ -8,6 +8,7 @@ import de.trollmann.evolutionSimulation.model.entities.Creature;
 import de.trollmann.evolutionSimulation.model.entities.FoodParticle;
 import de.trollmann.evolutionSimulation.model.entities.creatureParts.evolution.EvolutionOption;
 import de.trollmann.evolutionSimulation.model.net.Connection;
+import de.trollmann.evolutionSimulation.util.Configuration;
 import de.trollmann.evolutionSimulation.view.DrawableCanvas;
 
 /**
@@ -70,7 +71,7 @@ public class Mouth extends CreatureComponent {
 	}
 	
 	@Override
-	protected void propagateVisitorToChildren(CreatureComponentVisitor visitor) {
+	protected void propagateVisitorToChildren(CreatureComponentVisitor visitor, boolean childrenFirst) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -83,5 +84,10 @@ public class Mouth extends CreatureComponent {
 	public static Mouth createRandomMouth(MassComponent parent) {
 		Mouth mouth = new Mouth();
 		return mouth;
+	}
+	
+	@Override
+	public void calculateEnergyRequirement() {
+		this.energyRequirement = 0.01 / Configuration.averageCreatureLifeLength;
 	}
 }

@@ -49,6 +49,7 @@ public class MutationHistoryNode {
 	 */
 	public MutationHistoryNode(Creature blueprint) {
 		this.blueprint = blueprint;
+		blueprint.compileBody();
 	}
 	
 	/**
@@ -74,6 +75,7 @@ public class MutationHistoryNode {
 	 */
 	public MutationHistoryNode(Creature blueprint, MutationHistoryNode parent, EvolutionOption mutation) {
 		this.blueprint = blueprint;
+		blueprint.compileBody();
 		this.parent = parent;
 		this.mutation = mutation;
 		parent.getChildren().add(this);

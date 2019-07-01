@@ -19,6 +19,7 @@ import de.trollmann.evolutionSimulation.model.net.ProcessingNode;
 import de.trollmann.evolutionSimulation.model.net.functions.InFunction;
 import de.trollmann.evolutionSimulation.model.net.functions.OutFunction;
 import de.trollmann.evolutionSimulation.model.physics.HasPosition;
+import de.trollmann.evolutionSimulation.util.Configuration;
 import de.trollmann.evolutionSimulation.util.RandomGenerator;
 import de.trollmann.evolutionSimulation.view.DrawableCanvas;
 
@@ -103,15 +104,14 @@ public class MassComponent extends CreatureComponent{
 	/**
 	 * constructor
 	 */
-	public MassComponent(long radius) {
-		this.radius = radius;
+	public MassComponent() {
 		subComponents = new LinkedList<MassComponent.ComponentConnection>();
 	}
 	
 	@Override
-	protected void propagateVisitorToChildren(CreatureComponentVisitor visitor) {
+	protected void propagateVisitorToChildren(CreatureComponentVisitor visitor, boolean childrenFirst) {
 		for (ComponentConnection componentConnection : subComponents) {
-			componentConnection.component.visitSubtree(visitor);
+			componentConnection.component.visitSubtree(visitor,childrenFirst);
 		}
 	}
 	
@@ -255,11 +255,12 @@ public class MassComponent extends CreatureComponent{
 		
 		findSignalSenders();
 		sortInputComponents();
+		calculateEnergyRequirement();
 	}
 	
 	@Override
 	public CreatureComponent copy() {
-		MassComponent massComponent = new MassComponent(radius);
+		MassComponent massComponent = new MassComponent();
 		
 		// copy connections
 		HashMap<Connection,Connection> connectionMap = new HashMap<Connection, Connection>();
@@ -312,14 +313,15 @@ public class MassComponent extends CreatureComponent{
 	public void getEvolutionOptions(List<EvolutionOption> options) {
 		
 		// change radius by +-10
-		options.add(new EvolutionOption(1,"Mass - change radius") {
+		// TODO: find a way to change radius (e.g., dead weight components?)
+		/**options.add(new EvolutionOption(1,"Mass - change radius") {
 			
 			@Override
 			public void apply() {
 				radius += RandomGenerator.nextLong(20) - 10;
 				if(radius < 10) radius = 10;
 			}
-		});
+		});**/
 		
 		// add sub component
 		options.add(new EvolutionOption(1,"Mass - add sub component") {
@@ -496,6 +498,28 @@ public class MassComponent extends CreatureComponent{
 
 	}
 	
+	@Override
+	public void compile() {
+		this.radius = 20 +  (subComponents.size() *10);
+		System.out.println("setting radius: " + radius);
+		super.compile();
+	}
+	
+	@Override
+	public void calculateEnergyRequirement() {
+		// this component
+		this.energyRequirement = (this.getRadius()/100.0) /Configuration.averageCreatureLifeLength;
+		System.out.println("own energy: " + this.energyRequirement);
+		System.out.println("radius" + this.getRadius());
+		
+		// all connected components
+		for (ComponentConnection connection : subComponents) {
+			energyRequirement += connection.component.getEnergyRequirement();
+			System.out.println("next: " + this.energyRequirement);
+		}
+		
+	}
+	
 	public List<Output> getAllOutputs() {
 		LinkedList<Output> outputs = new LinkedList<Output>();
 		constantSignalProducer.getFreeOutputConnections(outputs);
@@ -570,7 +594,7 @@ public class MassComponent extends CreatureComponent{
 
 	
 	public static MassComponent createRandomMassComponent() {
-		MassComponent component = new MassComponent(20);
+		MassComponent component = new MassComponent();
 		return component;
 	}
 	

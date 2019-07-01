@@ -5,11 +5,11 @@ package de.trollmann.evolutionSimulation.model.entities.creatureParts;
  * @author frank
  *
  */
-public interface CreatureComponentVisitor {
-
+public abstract class CreatureComponentVisitor {
+	
 	/**
 	 * visit one creature
 	 * @param component
 	 */
-	public void visit(CreatureComponent component);
+	public abstract void visit(CreatureComponent component);
 }

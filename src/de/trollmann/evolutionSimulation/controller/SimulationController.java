@@ -68,7 +68,7 @@ public class SimulationController {
 		// setup test creature
 		
 		// main component
-		MassComponent head = new MassComponent(50);
+		MassComponent head = new MassComponent();
 		
 		// creature
 		Creature creature = new Creature(worldModel, head, 500, 500);
@@ -93,14 +93,14 @@ public class SimulationController {
 		Connection memoryProcessorConnection = new Connection(head, eyeProcessorConnectionMemory.getOutput(),tailProcessor.createInput());
 		
 		// processor <-> tail
-		MassComponent tail = new MassComponent(20);
+		MassComponent tail = new MassComponent();
 		Joint joint = new Joint(tail, 0, 0.4,0.4);
 		head.addComponent(0.5, joint);
 		Connection processorTailConnection = new Connection(head,tailProcessor.createOutput(), joint.getMovementInput());
 		
 		
 		// self-moving fin
-		MassComponent fin = new MassComponent(20);
+		MassComponent fin = new MassComponent();
 		Joint finJoint = new Joint(fin, 0, 0.1, 0.3);
 		head.addComponent(0.25, finJoint);
 		// constant output <-> finProcessor
@@ -120,6 +120,7 @@ public class SimulationController {
 
 		
 		creature.postInitialize();
+		System.out.println("required energy: " + head.getEnergyRequirement());
 		worldModel.getCreatures().add(creature);
 		worldModel.setEvolutionHistory(mutationHistoryRoot);
 		worldModel.setEvolutionUpdateListener(new WorldModel.EvolutionUpdateListener() {
