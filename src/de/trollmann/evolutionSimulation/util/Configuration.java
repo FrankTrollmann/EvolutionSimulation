@@ -25,6 +25,11 @@ public class Configuration {
 	public static double feedingThreshold = 0.05;
 	
 	/**
+	 * the nutrition value of one food particle.
+	 */
+	public static double foodParticleNutrition = 0.2;
+	
+	/**
 	 * threshold for mutation. to be interpreted as probability.
 	 * 0.2 seems to be a good value
 	 */
@@ -39,6 +44,19 @@ public class Configuration {
 	 * the average length of days it should take to get the initial creature from 100% energy to 0 % energy.
 	 * This factor influences energy consumption of creature components.
 	 */
-	public static double averageCreatureLifeLength = 100;
+	public static double averageCreatureLifeLength = 1000;
+	
+	/**
+	 * decides when a creature dies. It dies, when it's current energy is smaller than deathThreshold * initialEnergy. 
+	 */
+	public static double deathThreshold = 0.2;
+	
+	/**
+	 * decides when a creature reproduces. It reproduces when it's current energy bigger than initialEnergy*(1 + reproductionCost). 
+	 * During the birth reproductionCost*initialEnergy energy is lost by the creature.
+	 */
+	public static double reproductionCost = 1;
+	
+
 	
 }

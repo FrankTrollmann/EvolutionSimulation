@@ -321,7 +321,7 @@ public class Joint extends CreatureComponentWithConnections implements HasInputC
 	}
 	@Override
 	public void calculateEnergyRequirement() {
-		this.energyRequirement = target.getEnergyRequirement();
+		this.energyRequirement = 0;
 	}
 
 }

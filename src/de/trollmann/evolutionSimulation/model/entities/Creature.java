@@ -51,9 +51,28 @@ public class Creature extends HasSpeed implements CanDraw, CanAct{
 	long weight = -1;
 	
 	/**
-	 * threshold for reproduction. as soon as life force exceeds this threshold a child is produced
+	 * the inital energy value.
 	 */
-	long reproductionThreshold = -1;
+	double initialEnergy = 0;
+		/**
+		 * getter
+		 * @return
+		 */
+		public double getInitialEnergy() {
+			return initialEnergy;
+		}
+		/**
+		 * adder
+		 * @param energy
+		 */
+		protected void  addInitialEnergy(double energy) {
+			this.initialEnergy += energy;
+		}
+	
+//	/**
+//	 * threshold for reproduction. as soon as life force exceeds this threshold a child is produced
+//	 */
+//	long reproductionThreshold = -1;
 	
 	/**
 	 * the size of the biggest creature part
@@ -62,20 +81,34 @@ public class Creature extends HasSpeed implements CanDraw, CanAct{
 	 */
 	long biggestPartSize = -1;
 	
+	
+	/**
+	 * the current energy of the creature
+	 */
+	double energy;
+		/**
+		 * getter
+		 * @return
+		 */
+		public double getEnergy() {
+			return energy;
+		}
+	
+	
 	/**
 	 * the current amount of food consumed
 	 */
-	long nutritionValue = 0;
+//	long nutritionValue = 0;
 	
 	/**
 	 * the life force of the creature
 	 * the creature dies when this reaches 0.
 	 * life force is incremented for each food consumed
 	 */
-	double lifeForce = 1;
-		public double getLifeForce() {
-			return lifeForce;
-		}
+//	double lifeForce = 1;
+//		public double getLifeForce() {
+//			return lifeForce;
+//		}
 	 
 	/**
 	 * reference to the respective entry in th emutation history
@@ -140,9 +173,9 @@ public class Creature extends HasSpeed implements CanDraw, CanAct{
 		
 		// TODO: can this be merged into postInitialize somehow?
 		compileBody();
+		this.energy = initialEnergy;
 		
 		this.weight = head.getWeight();
-		reproductionThreshold = weight / 2;
 		this.biggestPartSize = head.getBiggestPartSize();
 		this.mutationHistoryNode.onCreatureBirth();
 		
@@ -154,12 +187,14 @@ public class Creature extends HasSpeed implements CanDraw, CanAct{
 	 * compiles the body of the creature, filling in blanks that are 
 	 */
 	public void compileBody() {
+		
 		head.visitSubtree(new CreatureComponentVisitor() {
+			
 			
 			@Override
 			public void visit(CreatureComponent component) {
 				component.compile();
-				
+				Creature.this.addInitialEnergy(component.getEnergyRequirement());
 			}
 		}, true);
 	}
@@ -185,15 +220,14 @@ public class Creature extends HasSpeed implements CanDraw, CanAct{
 	/**
 	 * increase nutrition balue by taking a bite
 	 */
-	public void takeBite() {
-		nutritionValue ++;
-		lifeForce += 0.2;
-//		System.out.println(nutritionValue + " " + reproductionThreshold + " " + lifeForce); 
+	public void takeBite(double consumedEnergy) {
+		this.energy += consumedEnergy;
 		
-		if(nutritionValue > reproductionThreshold) {
-			nutritionValue -= reproductionThreshold;
+		if(energy > initialEnergy * (1 + Configuration.reproductionCost)) {
+			energy -= initialEnergy * Configuration.reproductionCost;
 			reproduce();
 		}
+
 	}
 	
 	public void reproduce() {
@@ -282,11 +316,12 @@ public class Creature extends HasSpeed implements CanDraw, CanAct{
 	
 	@Override
 	public void act() {
-		lifeForce -= 0.001;
-		if(lifeForce < 0) {
+		energy -= initialEnergy/Configuration.averageCreatureLifeLength;
+		if(energy < initialEnergy * Configuration.deathThreshold ) {
 			deathAndCleanup();
 		} else {
 			head.act(this.getX(), this.getY(), this.getRotation());
+			// TODO: remove action costs here!
 		}
 	}
 

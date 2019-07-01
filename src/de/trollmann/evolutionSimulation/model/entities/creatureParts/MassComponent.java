@@ -118,7 +118,7 @@ public class MassComponent extends CreatureComponent{
 	@Override
 	public void draw(DrawableCanvas view, double x, double y, double angle) {
 		
-		double blue = creature.getLifeForce();
+		double blue = creature.getEnergy() / creature.getInitialEnergy();
 		if(blue > 1) blue = 1;
 		
 		Color color = new Color(0, 0, (int) Math.floor(blue * 255));
@@ -161,7 +161,6 @@ public class MassComponent extends CreatureComponent{
 		outputPositions.put(constantSignalProducer, constantProducerPos);
 		
 		// draw memory components in an arc
-		System.out.println("memory");
 		if(this.getMemory().size() > 0) {
 			double memoryDistance = this.getRadius() * 0.2;
 			double memoryStep = 1.0 / this.getMemory().size();
@@ -176,12 +175,10 @@ public class MassComponent extends CreatureComponent{
 		}
 		
 		// draw signal processors
-		System.out.println("signal processors " + this.getSignalProcessors().size());
 		if(this.getSignalProcessors().size() > 0) {
 			double processorDistance = this.getRadius() * 0.6;
 			double processorOffset = 0.3;
 			double processorStep = 1.0 / this.getSignalProcessors().size();
-			System.out.println("processorStep" +  processorStep);
 			for(int i = 0; i < this.getSignalProcessors().size(); i++) {
 				HasPosition childPosition = getInnerPosition(x, y, processorDistance, angle + i * processorStep + processorOffset);
 				view.drawCircle(childPosition.getX(), childPosition.getY(), 5, Color.white);
@@ -501,22 +498,13 @@ public class MassComponent extends CreatureComponent{
 	@Override
 	public void compile() {
 		this.radius = 20 +  (subComponents.size() *10);
-		System.out.println("setting radius: " + radius);
 		super.compile();
 	}
 	
 	@Override
 	public void calculateEnergyRequirement() {
 		// this component
-		this.energyRequirement = (this.getRadius()/100.0) /Configuration.averageCreatureLifeLength;
-		System.out.println("own energy: " + this.energyRequirement);
-		System.out.println("radius" + this.getRadius());
-		
-		// all connected components
-		for (ComponentConnection connection : subComponents) {
-			energyRequirement += connection.component.getEnergyRequirement();
-			System.out.println("next: " + this.energyRequirement);
-		}
+		this.energyRequirement = this.getRadius()/100.0;
 		
 	}
 	
@@ -614,7 +602,6 @@ public class MassComponent extends CreatureComponent{
 			inputConnections.add(memory);
 		}
 		
-		System.out.println("input connections: " + inputConnections.size());
 		
 		// sort them
 		sortedConnections = new LinkedList<HasInputConnections>();
@@ -639,7 +626,6 @@ public class MassComponent extends CreatureComponent{
 			current = null;
 			finished = inputConnections.size() == 0;
 		}
-		System.out.println("sorted connections: " + sortedConnections.size());
 		
 		
 	}

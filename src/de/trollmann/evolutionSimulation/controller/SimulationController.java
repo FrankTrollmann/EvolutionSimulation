@@ -120,7 +120,7 @@ public class SimulationController {
 
 		
 		creature.postInitialize();
-		System.out.println("required energy: " + head.getEnergyRequirement());
+		System.out.println("required energy: " + creature.getInitialEnergy());
 		worldModel.getCreatures().add(creature);
 		worldModel.setEvolutionHistory(mutationHistoryRoot);
 		worldModel.setEvolutionUpdateListener(new WorldModel.EvolutionUpdateListener() {
@@ -143,7 +143,6 @@ public class SimulationController {
 			
 			if(lastTickMoment > 0 ) {
 				while(lastTickMoment + tickDurationInMs > System.currentTimeMillis()) {
-					//System.out.println("wait");
 					// waste time to finish the tick
 				}
 			}

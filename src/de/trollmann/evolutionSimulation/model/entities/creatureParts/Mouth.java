@@ -38,7 +38,7 @@ public class Mouth extends CreatureComponent {
 		for(FoodParticle food : creature.getWorldModel().getFoodParticles()) {
 			if(food.getPositionDistance(x,y) <= radius + food.getRadius()) {
 				boolean successful = food.takeBite();
-				if(successful) creature.takeBite();
+				if(successful) creature.takeBite(Configuration.foodParticleNutrition);
 			}
 		}
 	}
@@ -88,6 +88,6 @@ public class Mouth extends CreatureComponent {
 	
 	@Override
 	public void calculateEnergyRequirement() {
-		this.energyRequirement = 0.01 / Configuration.averageCreatureLifeLength;
+		this.energyRequirement = 0.01;
 	}
 }

@@ -154,7 +154,7 @@ public class Eye extends CreatureComponentWithConnections implements HasOutputCo
 	
 	@Override
 	public void calculateEnergyRequirement() {
-		this.energyRequirement = 0.01 / Configuration.averageCreatureLifeLength;
+		this.energyRequirement = 0.01;
 		
 	}
 }
