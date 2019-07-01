@@ -93,14 +93,14 @@ public class SimulationController {
 		Connection memoryProcessorConnection = new Connection(head, eyeProcessorConnectionMemory.getOutput(),tailProcessor.createInput());
 		
 		// processor <-> tail
-		MassComponent tail = new MassComponent();
+		MassComponent tail = new MassComponent(10);
 		Joint joint = new Joint(tail, 0, 0.4,0.4);
 		head.addComponent(0.5, joint);
 		Connection processorTailConnection = new Connection(head,tailProcessor.createOutput(), joint.getMovementInput());
 		
 		
 		// self-moving fin
-		MassComponent fin = new MassComponent();
+		MassComponent fin = new MassComponent(10);
 		Joint finJoint = new Joint(fin, 0, 0.1, 0.3);
 		head.addComponent(0.25, finJoint);
 		// constant output <-> finProcessor

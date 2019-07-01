@@ -45,6 +45,11 @@ public class MassComponent extends CreatureComponent{
 	}
 	
 	/**
+	 * this property increases the mass of the component artificially. 
+	 */
+	public int radiusIncrease = 0;
+	
+	/**
 	 * reference to all connected components
 	 * links are unidirectionl (no connection to the compoment this has bee referenced from , if any)
 	 */
@@ -63,6 +68,9 @@ public class MassComponent extends CreatureComponent{
 	}
 	
 	
+	/**
+	 * a constant one signal for signal processing purposes.
+	 */
 	ConstantOne constantSignalProducer = new ConstantOne();
 	public ConstantOne getConstantSignalProducer() {
 		return constantSignalProducer;
@@ -75,6 +83,8 @@ public class MassComponent extends CreatureComponent{
 	public void addConnection(Connection connection) {
 		this.connections.add(connection);
 	}
+	
+	
 	
 	/**
 	 * the nodes that do single processing but do not have a 
@@ -106,6 +116,11 @@ public class MassComponent extends CreatureComponent{
 	 */
 	public MassComponent() {
 		subComponents = new LinkedList<MassComponent.ComponentConnection>();
+	}
+	
+	public MassComponent(int radiusIncrease) {
+		this();
+		this.radiusIncrease = radiusIncrease;
 	}
 	
 	@Override
@@ -269,6 +284,7 @@ public class MassComponent extends CreatureComponent{
 	public CreatureComponent copy() {
 		MassComponent massComponent = new MassComponent();
 		
+		massComponent.radiusIncrease = this.radiusIncrease;
 		// copy connections
 		HashMap<Connection,Connection> connectionMap = new HashMap<Connection, Connection>();
 		for (Connection connection : connections) {
@@ -329,6 +345,18 @@ public class MassComponent extends CreatureComponent{
 				if(radius < 10) radius = 10;
 			}
 		});**/
+		options.add(new EvolutionOption(1, "Mass - change radius increase") {
+			
+			@Override
+			public void apply() {
+				double delta = RandomGenerator.nextLong(20) - 10;
+				radiusIncrease = Math.max(radiusIncrease, 0);
+				
+				this.description_appender = " delta = " + delta;
+				
+			}
+		});
+
 		
 		// add sub component
 		options.add(new EvolutionOption(1,"Mass - add sub component") {
@@ -507,7 +535,7 @@ public class MassComponent extends CreatureComponent{
 	
 	@Override
 	public void compile() {
-		this.radius = 20 +  (subComponents.size() *10);
+		this.radius = 20 +  (subComponents.size() *10) + radiusIncrease;
 		super.compile();
 	}
 	
