@@ -30,6 +30,11 @@ public class Configuration {
 	public static double foodParticleNutrition = 0.2;
 	
 	/**
+	 * the energy available to the world. Energy will be held constant by adding food particles as energy is consumed by creatures, to balance the energy level. 
+	 */
+	public static double worldEnergy = 60;
+	
+	/**
 	 * threshold for mutation. to be interpreted as probability.
 	 * 0.2 seems to be a good value
 	 */

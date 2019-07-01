@@ -23,13 +23,21 @@ public class FoodParticle extends HasRadius implements CanDraw {
 	/**
 	 * nutritionalValue of the food.
 	 */
-	long foodValue;
+	long nrBites;
 	
 	/**
-	 * increase the food value of this particle
+	 * getter for the nr of bites
+	 * @return
 	 */
-	public void increaseFoodValue() {
-		foodValue++;
+	public long getNrBites() {
+		return nrBites;
+	}
+	
+	/**
+	 * increase the food value of this particle by adding another bite
+	 */
+	public void addBite() {
+		nrBites++;
 	}
 	
 	/**
@@ -40,13 +48,13 @@ public class FoodParticle extends HasRadius implements CanDraw {
 	public FoodParticle(WorldModel worldModel, long x, long y) {
 		super(x, y);
 		this.worldModel = worldModel;
-		foodValue = 1;
+		nrBites = 1;
 	}
 
 	
 	@Override
 	public long getRadius() {
-		return foodValue * 10;
+		return nrBites * 10;
 	}
 	
 	@Override
@@ -59,8 +67,8 @@ public class FoodParticle extends HasRadius implements CanDraw {
 	 * returns true if there is enough food left to take a bite
 	 */
 	public boolean takeBite() {
-		if(foodValue <= 0) return false;
-		foodValue --;
+		if(nrBites <= 0) return false;
+		nrBites --;
 		return true;
 	}
 	
@@ -69,7 +77,7 @@ public class FoodParticle extends HasRadius implements CanDraw {
 	 * @return
 	 */
 	public boolean isEmpty() {
-		return foodValue <= 0;
+		return nrBites <= 0;
 	}
 
 }

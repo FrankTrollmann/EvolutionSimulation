@@ -46,6 +46,18 @@ public class WorldModel implements CanDraw, CanAct, CanDoMoveAction{
 		return creatures;
 	}
 	
+	
+	public double getBoundEnergy() {
+		double energy = 0;
+		for (Creature creature : creatures) {
+			energy += creature.getEnergy();
+		}
+		for (FoodParticle particle : foodParticles) {
+			energy += particle.getNrBites() * Configuration.foodParticleNutrition;
+		}
+		return energy;
+	}
+	
 	/**
 	 * temp storage for new creatures to add to the world.
 	 */
@@ -87,6 +99,8 @@ public class WorldModel implements CanDraw, CanAct, CanDoMoveAction{
 			return evolutionUpdateListener;
 		}
 	
+		
+		
 	/**
 	 * constructors
 	 */
@@ -108,7 +122,7 @@ public class WorldModel implements CanDraw, CanAct, CanDoMoveAction{
 		FoodParticle newParticle = new FoodParticle(this, x, y);
 		for (FoodParticle foodParticle : this.getFoodParticles()) {
 			if(foodParticle.getPositionDistance(newParticle) < foodParticle.getRadius() + newParticle.getRadius()) {
-				foodParticle.increaseFoodValue();
+				foodParticle.addBite();
 				return;
 			}
 				

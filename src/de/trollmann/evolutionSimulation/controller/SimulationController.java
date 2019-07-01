@@ -133,9 +133,9 @@ public class SimulationController {
 		// initi evolution history after at least one creature has been added.
 		view.initializeHistoryView(mutationHistoryRoot);
 		
-		for(int i = 0; i < 500; i++) {
-			worldModel.addRandomFoodParticle();
-		}
+//		for(int i = 0; i < 500; i++) {
+//			worldModel.addRandomFoodParticle();
+//		}
 		
 		
 		// main simulation loop
@@ -158,13 +158,14 @@ public class SimulationController {
 	 */
 	public void tick() {
 		
-		System.out.println("tick " + worldModel.getCreatures().size());
+		System.out.println("tick " + worldModel.getCreatures().size() + " " + worldModel.getBoundEnergy());
+		
 		
 		// feed
-		if(RandomGenerator.nextDouble() < Configuration.feedingThreshold) {
+		double currentEnergy = worldModel.getBoundEnergy();
+		for(double energy = currentEnergy; energy < Configuration.worldEnergy - Configuration.foodParticleNutrition; energy += Configuration.foodParticleNutrition) {
 			worldModel.addRandomFoodParticle();
-		};
-		
+		}
 		
 		
 		// act
